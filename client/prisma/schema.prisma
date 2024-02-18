@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Model {
+  id                          String   @id @default(uuid())
+  model_name                  String
+  max_input_tokens            Int
+  output_dimensions           Int
+  price_per_1000_token_in_USD Float
+  embedder                    Embedder @relation(fields: [embedder_id], references: [id])
+  embedder_id                 String
+  index                       Int      @default(autoincrement())
+}
+
+model Embedder {
+  id           String       @id @default(uuid())
+  service_name String
+  image_url    String
+  api          String
+  is_local     Boolean
+  models       Model[]
+  myEmbedders  MyEmbedder[]
+  index        Int          @default(autoincrement())
+}
+
+model MyEmbedder {
+  id                  String   @id @default(uuid())
+  max_chunk_size      Int
+  overlap_size        Int
+  chosen_model_id     String
+  my_embedder_name    String
+  embedder_service    Embedder @relation(fields: [embedder_service_id], references: [id])
+  embedder_service_id String
+  index               Int      @default(autoincrement())
+}

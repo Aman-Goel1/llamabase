@@ -1,0 +1,4 @@
+langchain
+fastapi
+psycopg2
+sqlalchemy
